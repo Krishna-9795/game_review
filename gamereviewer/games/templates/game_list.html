@@ -1,0 +1,15 @@
+<html>
+<head>
+    <title>Game Reviewer</title>
+</head>
+<body>
+    <h1>Games List</h1>
+    <ul>
+        {% for game in games %}
+            <li><a href="{% url 'game-detail' game.id %}">{{ game.title }}</a></li>
+        {% empty %}
+            <li>No games available.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

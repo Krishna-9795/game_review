@@ -1,0 +1,28 @@
+<html>
+<head>
+    <title>{{ game.title }}</title>
+</head>
+<body>
+    <h1>{{ game.title }}</h1>
+    <p>{{ game.description }}</p>
+
+    <h2>Reviews</h2>
+    <ul>
+        {% for review in reviews %}
+            <li>{{ review.user }} says: {{ review.comment }}</li>
+        {% empty %}
+            <li>No reviews available.</li>
+        {% endfor %}
+    </ul>
+
+    <h2>Add a Review</h2>
+    <form method="post" action="{% url 'review-create' game.id %}">
+        {% csrf_token %}
+        <label for="user">User:</label>
+        <input type="text" name="user" required><br>
+        <label for="comment">Comment:</label>
+        <textarea name="comment" required></textarea><br>
+        <input type="submit" value="Submit Review">
+    </form>
+</body>
+</html>
