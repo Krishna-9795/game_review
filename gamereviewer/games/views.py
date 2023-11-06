@@ -96,6 +96,11 @@ def comment_list(request):
 
 
 
+
+
+
+
+
 class ReviewList(generics.ListCreateAPIView):
     queryset = Review.objects.filter(approved=True)
     serializer_class = ReviewSerializer
