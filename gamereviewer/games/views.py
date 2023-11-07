@@ -1,8 +1,7 @@
-from rest_framework import generics
+
 from .models import Game, Review, Comment
 from .serializers import GameSerializer, ReviewSerializer, CommentSerializer
-#from django.http import HttpResponse
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view
 from rest_framework import status
 from rest_framework.response import Response
@@ -100,6 +99,10 @@ def comment_list(request):
 
 
 
+""""
+from django.http import HttpResponse
+from rest_framework import generics
+from django.shortcuts import get_object_or_404, render
 
 class ReviewList(generics.ListCreateAPIView):
     queryset = Review.objects.filter(approved=True)
@@ -130,3 +133,4 @@ class GameDetail(generics.RetrieveUpdateDestroyAPIView):
         return render(request, 'games/game_detail.html', {'game': game, 'reviews': reviews})
 #def index(request):
 #   return HttpResponse("Welcome to the Game Review Platform")
+"""
