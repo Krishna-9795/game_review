@@ -10,8 +10,9 @@ urlpatterns = [
     path('reviews/<int:pk>/', views.review_detail, name='review-detail'),
     path('comments/', views.comment_list, name='comment-list'),
     path('comments/create/', views.create_comment, name='create-comment'),
-    #path('comments/', views.CommentList.as_view(), name='comment-list'),
-    #  URL pattern for the root path
-    #  path('', views.index, name='index'),
-    #path('games/', views.GameList.as_view(), name='game-list'),
+    
 ]
+#path('comments/', views.CommentList.as_view(), name='comment-list'),
+#URL pattern for the root path,
+#path('', views.index, name='index'),
+#path('games/', views.GameList.as_view(), name='game-list'),
