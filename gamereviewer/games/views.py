@@ -9,7 +9,7 @@ from rest_framework.response import Response
 
 @api_view(['POST'])
 def create_game(request):
-    if request.method == 'POST':
+    if request.method == 'POST': 
         serializer = GameSerializer(data=request.data)
 
         if serializer.is_valid():
