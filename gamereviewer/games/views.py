@@ -1,13 +1,22 @@
-
 from .models import Game, Review, Comment
-from .serializers import GameSerializer, ReviewSerializer, CommentSerializer
+from .serializers import GameSerializer, ReviewSerializer, CommentSerializer,UserSerializer
 from django.shortcuts import get_object_or_404
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework import status
 from rest_framework.response import Response
 
+from rest_framework.generics import RetrieveAPIView
+from rest_framework.permissions import IsAuthenticated
+
+
+class UserAPIView(RetrieveAPIView):
+    permission_classes=(IsAuthenticated,)
+    serializer_class=UserSerializer
+    def get_object(self):
+        return self.request.user
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def create_game(request):
     if request.method == 'POST': 
         serializer = GameSerializer(data=request.data)
@@ -19,6 +28,7 @@ def create_game(request):
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def game_list(request):
     if request.method=='GET':
         games=Game.objects.all()
@@ -28,6 +38,7 @@ def game_list(request):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 @api_view(['GET', 'PUT', 'DELETE'])
+@permission_classes([IsAuthenticated])
 def game_detail(request, pk):
     game = get_object_or_404(Game, pk=pk)
 
@@ -47,6 +58,7 @@ def game_detail(request, pk):
         return Response(status=status.HTTP_204_NO_CONTENT)
 # CRUD for reviews table
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def create_review(request):
     serializer = ReviewSerializer(data=request.data)
     if serializer.is_valid():
@@ -55,12 +67,14 @@ def create_review(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def review_list(request):
     reviews = Review.objects.all()
     serializer = ReviewSerializer(reviews, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
 @api_view(['GET', 'PUT', 'DELETE'])
+@permission_classes([IsAuthenticated])
 def review_detail(request, pk):
     review = get_object_or_404(Review, pk=pk)
 
@@ -80,6 +94,7 @@ def review_detail(request, pk):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def create_comment(request):
     serializer = CommentSerializer(data=request.data)
     if serializer.is_valid():
@@ -88,6 +103,7 @@ def create_comment(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def comment_list(request):
     comments = Comment.objects.all()
     serializer = CommentSerializer(comments, many=True)
@@ -100,6 +116,22 @@ def comment_list(request):
 
 
 """"
+
+from .serializers import GameSerializer, ReviewSerializer, CommentSerializer,LoginSerializer
+class LoginAPIView(APIView):
+    def post(self, request, *args, **kwargs):
+        serializer = LoginSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        user = authenticate(username=serializer.validated_data['username'],
+                            password=serializer.validated_data['password'])
+
+        if user:
+            refresh = RefreshToken.for_user(user)
+            return Response({'refresh': str(refresh), 'access': str(refresh.access_token)}, status=status.HTTP_200_OK)
+        else:
+            return Response({'error': 'Invalid credentials.'}, status=status.HTTP_401_UNAUTHORIZED)
+
 from django.http import HttpResponse
 from rest_framework import generics
 from django.shortcuts import get_object_or_404, render
